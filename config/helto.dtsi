@@ -1,0 +1,92 @@
+
+/ {
+behaviors {
+    //
+    // Shift + LEFT_BRACKET = LEFT_BRACE
+    //
+    left_bracket: left_bracket_and_left_brace {
+        compatible = "zmk,behavior-mod-morph";
+        #binding-cells = <0>;
+        bindings = <&kp _LBKT>, <&kp _LBRC>;
+        mods = <(MOD_LSFT|MOD_RSFT)>;
+    };
+
+    //
+    // Shift + RIGHT_BRACKET = RIGHT_BRACE
+    //
+    right_bracket: right_bracket_and_right_brace {
+        compatible = "zmk,behavior-mod-morph";
+        #binding-cells = <0>;
+        bindings = <&kp _RBKT>, <&kp _RBRC>;
+        mods = <(MOD_LSFT|MOD_RSFT)>;
+    };
+
+    // convert dead keys to their living counterparts when needed
+    #define UNDEAD(name, ...) \
+        ZMK_MACRO(name, \
+            wait-ms = <1>; \
+            tap-ms = <1>; \
+            bindings = __VA_ARGS__; \
+        )
+
+    #define UNDEAD_SEQ_BASE(keystrokes) \
+        <&macro_tap &kp keystrokes>
+
+    #define UNDEAD_SEQ_DEAD(keystrokes) \
+        <&macro_tap &kp keystrokes &kp SPACE>
+
+    UNDEAD(base_tilde,
+        #if defined(_TILDE)
+          UNDEAD_SEQ_BASE(_TILDE)
+        #elif defined(DEAD_TILDE)
+          UNDEAD_SEQ_DEAD(DEAD_TILDE)
+        #endif
+    )
+    UNDEAD(base_caret,
+        #if defined(_CARET)
+          UNDEAD_SEQ_BASE(_CARET)
+        #elif defined(DEAD_CARET)
+          UNDEAD_SEQ_DEAD(DEAD_CARET)
+        #endif
+    )
+    UNDEAD(base_grave,
+        #if defined(_GRAVE)
+          UNDEAD_SEQ_BASE(_GRAVE)
+        #elif defined(DEAD_GRAVE)
+          UNDEAD_SEQ_DEAD(DEAD_GRAVE)
+        #endif
+    )
+    UNDEAD(base_acute,
+        #if defined(_ACUTE)
+          UNDEAD_SEQ_BASE(_ACUTE)
+        #elif defined(DEAD_ACUTE)
+          UNDEAD_SEQ_DEAD(DEAD_ACUTE)
+        #endif
+    )
+    // Windows sleep key
+    win_sleep: win_sleep {
+        wait-ms = <100>;
+        tap-ms = <5>;
+        compatible = "zmk,behavior-macro";
+        label = "WIN_SLEEP_KEY";
+        #binding-cells = <0>;
+        bindings = <&kp LG(X) &kp N &kp SV_OE>;
+    };
+
+    // Email address
+    email: email {
+        compatible = "zmk,behavior-macro";
+        label = "EMAIL";
+        #binding-cells = <0>;
+        bindings = <
+            &kp T &kp O &kp M &kp A &kp S
+            &kp _DOT
+            &kp H &kp E &kp L &kp L &kp S &kp T &kp R &kp O &kp M
+                &kp _AT
+                &kp Y &kp A &kp H &kp O &kp O
+                &kp _DOT
+                &kp S &kp E
+            >;
+    };
+};
+/*HACK*/};

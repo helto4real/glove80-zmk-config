@@ -294,6 +294,7 @@
 / {
 
 #include "engrammer.dtsi"
+#include "helto.dtsi"
 // NOTE: Use the many #define settings below to customize this keymap!
 /*HACK*//{
 
